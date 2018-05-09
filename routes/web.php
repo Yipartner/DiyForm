@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/data/{formId}', 'DataController@getData');
+Route::post('/data/{formId}', 'DataController@postData');
+Route::get('/data/export/{formId}', 'DataController@exportData');
