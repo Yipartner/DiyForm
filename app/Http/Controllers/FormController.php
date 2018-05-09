@@ -65,8 +65,9 @@ class FormController extends Controller
             'message' => '更新成功'
         ]);
     }
-    public function changeStatus($formId,$status){
+    public function changeStatus($formId,Request $request){
         //TODO 权限
+        $status=$request->input('status');
         $res=0;
         switch ($status){
             case 0:
