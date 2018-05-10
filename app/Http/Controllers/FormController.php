@@ -59,6 +59,7 @@ class FormController extends Controller
             ]);
         }
         $css=ValidationHelper::getInputData($request,$rule);
+        $css['id']=$formId;
         $this->formService->updateForm($css);
         return response()->json([
             'code' =>1000,
@@ -79,6 +80,12 @@ class FormController extends Controller
             case 2:
                 $res=$this->formService->changeStatusTwo($formId);
                 break;
+        }
+        if ($status>2){
+            return response()->json([
+                'code' => 1005,
+                'message'=> '参数错误'
+            ]);
         }
         if (!$res){
             return response()->json([
@@ -116,6 +123,14 @@ class FormController extends Controller
         return response()->json([
             'code' =>1000,
             'form' => $form
+        ]);
+    }
+    public function getForms(Request $request){
+        $userId=1;
+        $forms=$this->formService->getMyForms($userId);
+        return response()->json([
+            'code' => 1000,
+            'message' =>$forms
         ]);
     }
 }
