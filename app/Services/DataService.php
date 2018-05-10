@@ -10,12 +10,13 @@ namespace App\Services;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DataService
 {
     public function isFormExist(int $formId): bool
     {
-        $form = DB::table('form')->where('id', $formId)->first();
+        $form = DB::table('forms')->where('id', $formId)->first();
         if ($form)
             return true;
         else
@@ -24,7 +25,7 @@ class DataService
 
     public function getForm(int $formId)
     {
-        $attributes = DB::table('form')->where('id', $formId)->value('attributes');
+        $attributes = DB::table('forms')->where('id', $formId)->value('attributes');
         return json_decode($attributes);
     }
 
@@ -34,15 +35,15 @@ class DataService
         $rules = [];
         foreach ($formData as $key => $value) {
             $rule = '';
-            if (isset($value['required']) && $value['required'] == 1) {
+            if (isset($value->required) && $value->required == 1) {
                 $rule .= 'required|';
             }
-            if (isset($value['required'])) {
-                $rule .= ('min:' . $value['min'] . '|');
+            if (isset($value->min)) {
+                $rule .= ('min:' . $value->min . '|');
 
             }
-            if (isset($value['max'])) {
-                $rule .= ('max:' . $value['max|'] . '|');
+            if (isset($value->max)) {
+                $rule .= ('max:' . $value->max . '|');
             }
             if ($rule != '')
                 $rule = substr($rule, 0, -1);
@@ -66,7 +67,7 @@ class DataService
         $formData = $this->getForm($formId);
         $sourceData = [];
         foreach ($formData as $key => $value) {
-            $sourceData[$key] = $value['name'];
+            $sourceData[$key] = $value->name;
         }
         $datas = DB::table('datas')->where('form_id', $formId)->select('data')->get();
         $resData = [];

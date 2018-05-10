@@ -16,7 +16,7 @@ class DataController extends Controller
 
     public function postData($formId,Request $request)
     {
-        if(!(isset($request->$formId) && $this->dataService->isFormExist($request->form_id)))
+        if(!$this->dataService->isFormExist($formId))
             return response()->json([
                 'code' => 2001,
                 'message' => '表单不存在'
