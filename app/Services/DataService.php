@@ -11,6 +11,8 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Excel;
+
 
 class DataService
 {
@@ -73,6 +75,7 @@ class DataService
         $resData = [];
         foreach ($datas as $data) {
             $rowData = [];
+            $data = json_decode($data->data);
             foreach ($data as $key => $value) {
                 $rowData[$sourceData[$key]] = $value;
             }
@@ -88,21 +91,22 @@ class DataService
         $title = [];
         $sourceData = [];
         foreach ($formData as $key => $value) {
-            $title[] = $value['name'];
-            $sourceData[$key] = $value['name'];
+            $title[] = $value->name;
+            $sourceData[$key] =$value->name;
         }
         $tableData[] = $title;
 
         foreach ($datas as $data) {
             $rowdata = [];
+            $data = json_decode($data->data);
             foreach ($data as $key => $value) {
                 $rowdata[] = $value;
             }
             $tableData[] = $rowdata;
         }
-        EXcel::create('组队信息表', function ($excel) use ($cellData) {
-            $excel->sheet('teams', function ($sheet) use ($cellData) {
-                $sheet->rows($cellData);
+        Excel::create('组队信息表', function ($excel) use ($tableData) {
+            $excel->sheet('teams', function ($sheet) use ($tableData) {
+                $sheet->rows($tableData);
             });
         })->export('xls');
     }

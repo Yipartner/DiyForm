@@ -62,9 +62,5 @@ class DataController extends Controller
                 'message' => '表单不存在'
             ]);
         $this->dataService->excelExport($formId);
-        return response()->json([
-            'code' => 1000,
-            'datas' => '导出成功'
-        ]);
     }
 }
