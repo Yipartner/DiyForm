@@ -24,11 +24,11 @@ class FormService{
 
     public function updateForm($formCss){
         $formCss['attributes']=json_encode($formCss['attributes']);
-        DB::table('tables')->where('id',$formCss['id'])->update($formCss);
+        DB::table('forms')->where('id',$formCss['id'])->update($formCss);
     }
 
     public function changeStatusZero($formId){
-        $num=DB::table('tables')->where([
+        $num=DB::table('forms')->where([
             ['id','=',$formId],
             ['status','<',3]
         ])->update([
@@ -38,7 +38,7 @@ class FormService{
     }
 
     public function changeStatusOne($formId){
-        $num=DB::table('tables')->where([
+        $num=DB::table('forms')->where([
             ['id','=',$formId],
             ['status','<',3]
         ])->update([
@@ -47,7 +47,7 @@ class FormService{
         return $num;
     }
     public function changeStatusTwo($formId){
-        $num=DB::table('tables')->where([
+        $num=DB::table('forms')->where([
             ['id','=',$formId],
             ['status','<',3]
         ])->update([
@@ -57,19 +57,19 @@ class FormService{
     }
     public function deleteForm(int $formId){
         DB::transaction(function () use ($formId){
-            DB::table('tables')->where('id',$formId)->delete();
-            DB::table('datad')->where('form_id',$formId)->delete();
+            DB::table('forms')->where('id',$formId)->delete();
+            DB::table('datas')->where('form_id',$formId)->delete();
         });
     }
 
     public function softDeleteForm(int $formId){
-        DB::table('tables')->where('id',$formId)->update([
+        DB::table('forms')->where('id',$formId)->update([
             'status'=>3
         ]);
     }
 
     public function getFormByUrl(string $url){
-        return DB::table('tables')->where([
+        return DB::table('forms')->where([
             ['url','=',$url],
             ['status','<',3]
         ])->first();
@@ -81,5 +81,8 @@ class FormService{
         }
         return false;
     }
-
+    public function getMyForms(int $userId){
+        $forms=DB::table('forms')->where('user_id',$userId)->get();
+        return $forms;
+    }
 }

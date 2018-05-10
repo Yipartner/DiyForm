@@ -59,14 +59,16 @@ class FormController extends Controller
             ]);
         }
         $css=ValidationHelper::getInputData($request,$rule);
+        $css['id']=$formId;
         $this->formService->updateForm($css);
         return response()->json([
             'code' =>1000,
             'message' => '更新成功'
         ]);
     }
-    public function changeStatus($formId,$status){
+    public function changeStatus($formId,Request $request){
         //TODO 权限
+        $status=$request->input('status');
         $res=0;
         switch ($status){
             case 0:
@@ -78,6 +80,12 @@ class FormController extends Controller
             case 2:
                 $res=$this->formService->changeStatusTwo($formId);
                 break;
+        }
+        if ($status>2){
+            return response()->json([
+                'code' => 1005,
+                'message'=> '参数错误'
+            ]);
         }
         if (!$res){
             return response()->json([
@@ -115,6 +123,14 @@ class FormController extends Controller
         return response()->json([
             'code' =>1000,
             'form' => $form
+        ]);
+    }
+    public function getForms(Request $request){
+        $userId=1;
+        $forms=$this->formService->getMyForms($userId);
+        return response()->json([
+            'code' => 1000,
+            'forms' =>$forms
         ]);
     }
 }

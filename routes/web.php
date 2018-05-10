@@ -18,3 +18,13 @@ Route::get('/', function () {
 Route::get('/data/{formId}', 'DataController@getData');
 Route::post('/data/{formId}', 'DataController@postData');
 Route::get('/data/export/{formId}', 'DataController@exportData');
+
+
+
+Route::get('/form/url/{url}','FormController@getFormByUrl');
+Route::post('/form/update/{formId}','FormController@updateForm');
+Route::post('/form/add','FormController@createForm');//
+Route::get('/form/delete/true/{formId}','FormController@trueDeleteForm');
+Route::get('/form/delete/soft/{formId}','FormController@softDeleteForm');
+Route::post('/form/change/{formId}','FormController@changeStatus');
+Route::get('/forms/me','FormController@getForms');
